@@ -144,9 +144,6 @@ const Volume = styled.input`
       height: 20px;
     }
   }
-  @media (max-width: 414px) {
-    display: none;
-  }
 `;
 const SeekContainer = styled.div`
   display: flex;
@@ -210,9 +207,6 @@ const Seek = styled.input`
       width: 20px;
       height: 20px;
     }
-  }
-  @media (max-width: 414px) {
-    display: none;
   }
 `;
 const VolumeSection = styled.div`

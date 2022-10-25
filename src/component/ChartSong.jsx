@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -106,7 +105,7 @@ const ChartSong = ({ song }) => {
         </TypeContainer>
       </SongContainer>
       <DurationContainer>
-        <Duration>{song.duration}</Duration>
+        <Duration>{"hg"}</Duration>
         <Menu
           width="17"
           height="17"
@@ -135,6 +134,7 @@ const ChartSong = ({ song }) => {
             strokeLinecap="round"
             strokeLinejoin="round"
           />
+          <audio src={song.audio} />
         </Menu>
       </DurationContainer>
     </Container>

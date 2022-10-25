@@ -23,7 +23,7 @@ const Right = styled.div`
 `;
 const ChartImg = styled.img`
   border-radius: 35.17px;
-  width: 284px;
+  max-width: 284px;
   @media (max-width: 625px) {
     width: 357px;
     margin: auto;
