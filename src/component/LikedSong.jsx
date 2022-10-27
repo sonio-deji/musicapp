@@ -36,7 +36,7 @@ const LikedSong = ({ song }) => {
     >
       <TextContainer>
         <Title>{song.title}</Title>
-        <Artiste>{song.title}</Artiste>
+        <Artiste>{song.artist}</Artiste>
       </TextContainer>
     </Container>
   );
