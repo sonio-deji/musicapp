@@ -40,7 +40,6 @@ const Right = styled.div`
 const Chart = () => {
   const [menu, setMenu] = useCycle(false, true);
   const [songLength, setSongLength] = useState(0);
-
   return (
     <Container>
       <MobileSidebar menu={menu} setMenu={setMenu} />

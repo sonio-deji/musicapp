@@ -79,44 +79,57 @@ const Like = styled.div`
   backdrop-filter: blur(5px);
 `;
 const LikeImg = styled.img``;
+const NoChart = styled.div`
+  font-size: 34px;
+  color: rgba(255, 255, 255, 1);
+  font-weight: 700;
+`;
 
 const ChartMiddle = ({ songLength }) => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const handleCollection = () => {
-    dispatch(addCollection(location.state.chart));
-  };
 
+  const handleCollection = () => {
+    dispatch(addCollection(!location.state ? "" : location.state.chart));
+  };
   return (
     <Container>
-      <Left>
-        <ChartImg src={location.state.chart.cover} />
-      </Left>
-      <Right>
-        <ChartTitle>{location.state.chart.artist}</ChartTitle>
-        <ChartDesc>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit
-          inventore nam earum expedita eaque enim tenetur facilis sint quisquam,
-          dolores esse facere, possimus saepe modi velit. Reiciendis provident
-          numquam magni?
-        </ChartDesc>
-        <ChartDetails>
-          {songLength} songs - {songLength * 2}+ mins
-        </ChartDetails>
-        <ActionContainer>
-          <Action type="play">
-            <ActionImg src="/icons-and-images/play.png" />
-            Play all
-          </Action>
-          <Action type="collection" onClick={handleCollection}>
-            <ActionImg src="/icons-and-images/music-square-add.png" />
-            Add to collection
-          </Action>
-          <Like>
-            <LikeImg src="/icons-and-images/redlike.png" />
-          </Like>
-        </ActionContainer>
-      </Right>
+      {location.state === null ? (
+        <NoChart>YOU HAVEN'T SELECTED A CHART</NoChart>
+      ) : (
+        <>
+          <Left>
+            <ChartImg src={!location.state ? "" : location.state.chart.cover} />
+          </Left>
+          <Right>
+            <ChartTitle>
+              {!location.state ? "" : location.state.chart.artist}
+            </ChartTitle>
+            <ChartDesc>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit
+              inventore nam earum expedita eaque enim tenetur facilis sint
+              quisquam, dolores esse facere, possimus saepe modi velit.
+              Reiciendis provident numquam magni?
+            </ChartDesc>
+            <ChartDetails>
+              {songLength} songs - {songLength * 2}+ mins
+            </ChartDetails>
+            <ActionContainer>
+              <Action type="play">
+                <ActionImg src="/icons-and-images/play.png" />
+                Play all
+              </Action>
+              <Action type="collection" onClick={handleCollection}>
+                <ActionImg src="/icons-and-images/music-square-add.png" />
+                Add to collection
+              </Action>
+              <Like>
+                <LikeImg src="/icons-and-images/redlike.png" />
+              </Like>
+            </ActionContainer>
+          </Right>
+        </>
+      )}
     </Container>
   );
 };

@@ -229,9 +229,10 @@ const VolumeSection = styled.div`
 const AudioPlayer = () => {
   const [volume, setVolume] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [shuffle, setShuffle] = useState(false);
+
   const [songIndex, setSongIndex] = useState(0);
   const [duration, setDuration] = useState(0);
-
   const [loop, setLoop] = useState(false);
   const [time, setTime] = useState(0);
 
@@ -240,6 +241,13 @@ const AudioPlayer = () => {
   const newSong = useSelector((state) => state.nowPlaying);
   const song = newSong.nowPlaying[songIndex];
 
+  useEffect(() => {
+    if (isPlaying) {
+      audioRef.current.play();
+    } else {
+      audioRef.current.pause();
+    }
+  }, [isPlaying]);
   const handleVolume = (e) => {
     audioRef.current.volume = volume;
     setVolume(e.target.value);
@@ -261,6 +269,9 @@ const AudioPlayer = () => {
     audioRef.current.currentTime = (divProgress / 100) * duration;
   };
   const nextButton = () => {
+    if (shuffle) {
+      setSongIndex(Math.floor(Math.random() * newSong.nowPlaying.length));
+    }
     const index = newSong.nowPlaying.findIndex((item) => item.id === song.id);
     if (index === newSong.nowPlaying.length - 1) {
       setSongIndex(0);
@@ -269,6 +280,9 @@ const AudioPlayer = () => {
     }
   };
   const prevButton = () => {
+    if (shuffle) {
+      setSongIndex(Math.floor(Math.random() * newSong.nowPlaying.length));
+    }
     const index = newSong.nowPlaying.findIndex((item) => item.id === song.id);
     if (songIndex === 0) {
       setSongIndex(newSong.nowPlaying.length - 1);
@@ -282,29 +296,20 @@ const AudioPlayer = () => {
   };
   const shuffleMusic = () => {
     setSongIndex(Math.floor(Math.random() * newSong.nowPlaying.length));
+    setShuffle(!shuffle);
   };
   const playSong = () => {
-    if (newSong.nowPlaying.length === 1) {
-      setIsPlaying(false);
-    }
     setIsPlaying(!isPlaying);
   };
-  useEffect(() => {
-    if (isPlaying) {
-      audioRef.current.play();
-    } else {
-      audioRef.current.pause();
-    }
-  }, [isPlaying]);
   return (
     <Container>
       <AudioContainer>
         <Wrapper>
           <SongInfo>
-            <SongImg src={song.cover} />
+            <SongImg src={song === undefined ? "" : song.cover} />
             <SongTitleWrapper>
-              <SongTitle>{song.title}</SongTitle>
-              <Artiste>{song.artist}</Artiste>
+              <SongTitle>{song === undefined ? "" : song.title}</SongTitle>
+              <Artiste>{song === undefined ? "" : song.artist}</Artiste>
             </SongTitleWrapper>
           </SongInfo>
           <Player>
@@ -366,9 +371,10 @@ const AudioPlayer = () => {
       </AudioContainer>
       <audio
         autoPlay
-        src={song.audio}
-        id={song.id}
+        src={song === undefined ? "" : song.audio}
+        id={song === undefined ? "" : song.id}
         ref={audioRef}
+        onEnded={nextButton}
         onTimeUpdate={onPlaying}
       ></audio>
     </Container>

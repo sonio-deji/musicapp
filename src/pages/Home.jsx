@@ -44,6 +44,7 @@ const Middle = styled.div`
 
 const Home = () => {
   const [search, setSearch] = useState("");
+
   const dispatch = useDispatch();
   const [menu, setMenu] = useCycle(false, true);
   const handleSearch = (e) => {
@@ -51,7 +52,7 @@ const Home = () => {
   };
   useEffect(() => {
     dispatch(fetchSongs());
-  });
+  }, [dispatch]);
   return (
     <Container>
       <MobileSidebar menu={menu} setMenu={setMenu} />

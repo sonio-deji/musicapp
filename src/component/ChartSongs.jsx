@@ -8,7 +8,7 @@ const Container = styled.div``;
 
 const ChartSongs = ({ setSongLength }) => {
   const location = useLocation();
-  const id = location.state.chart.id.split("-")[1];
+  const id = !location.state ? "" : location.state.chart.id.split("-")[1];
   const [songs, setsongs] = useState([]);
   useEffect(() => {
     const makeRequest = async () => {
