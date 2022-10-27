@@ -1,13 +1,12 @@
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import { useState } from "react";
-
+import { useState, useEffect, useRef } from "react";
 const Container = styled.div`
   position: fixed;
   bottom: 0;
   z-index: 5555;
-  left: 20%;
-  right: 20%;
+  left: 0;
+  right: 0;
   background-color: rgba(29, 33, 35, 0.9);
   filter: drop-shadow(0px -25px 100px rgba(16, 16, 16, 0.51));
 
@@ -21,13 +20,16 @@ const AudioContainer = styled.div`
   max-width: 1125px;
   padding: 20px;
   margin: auto;
+  @media (max-width: 414px) {
+    width: unset;
+    padding: 0px;
+  }
 `;
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
+
   @media (max-width: 414px) {
-    align-items: center;
-    width: 358px;
     margin: 0 auto;
   }
 `;
@@ -36,7 +38,7 @@ const SongInfo = styled.div`
   margin-top: 32px;
 `;
 const SongImg = styled.img`
-  width: 80px;
+  max-width: 80px;
   border-radius: 20px;
 `;
 const SongTitleWrapper = styled.div`
@@ -47,6 +49,9 @@ const SongTitle = styled.span`
   font-weight: 700;
   font-size: 14px;
   color: rgba(255, 255, 255, 1);
+  @media (max-width: 414px) {
+    font-size: 10px;
+  }
 `;
 const Artiste = styled.span`
   color: rgba(255, 255, 255, 0.44);
@@ -67,6 +72,7 @@ const Player = styled.div`
 const PlayerIcon = styled.img`
   width: 16px;
   height: 16px;
+  cursor: pointer;
   @media (max-width: 414px) {
     display: ${(props) => props.type === "mobileIcons" && "none"};
     width: ${(props) => props.type === "next" && "21.82px"};
@@ -150,12 +156,15 @@ const SeekContainer = styled.div`
   align-items: center;
   margin-top: 20px;
   justify-content: center;
+  max-width: 749px;
+  margin: auto;
+  cursor: pointer;
 `;
 const Seek = styled.input`
-  width: 749px;
+  width: 100%;
   background-color: #1e1e1e;
   display: block;
-  height: 4px;
+  height: 9px;
   border-radius: 50%;
   cursor: pointer;
   &::-moz-range-track {
@@ -217,49 +226,116 @@ const VolumeSection = styled.div`
   }
 `;
 
-const AudioPlayer = ({ timeUpdate, time, type }) => {
-  const [volume, setVolume] = useState(0);
-  const newSong = useSelector((state) => state.newRelease.songs);
+const AudioPlayer = () => {
+  const [volume, setVolume] = useState(1);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [songIndex, setSongIndex] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const [loop, setLoop] = useState(false);
+  const [time, setTime] = useState(0);
+
+  const audioRef = useRef();
+  const seek = useRef();
+  const newSong = useSelector((state) => state.nowPlaying);
+  const song = newSong.nowPlaying[songIndex];
+
   const handleVolume = (e) => {
-    const audio = document.getElementById(newSong.id);
-    audio.volume = volume;
+    audioRef.current.volume = volume;
     setVolume(e.target.value);
   };
-  const playSong = () => {
-    const audio = document.getElementById(newSong.id);
-    if (audio.play()) {
-      audio.pause();
+  const onPlaying = () => {
+    const songDuration = audioRef.current.duration;
+    const ct = audioRef.current.currentTime;
+    setTime(ct);
+    setDuration(songDuration);
+  };
+  const progress = (e) => {
+    audioRef.current.currentTime = time;
+    setTime(e.target.value);
+  };
+  const checkWidth = (e) => {
+    let width = seek.current.clientWidth;
+    const offset = e.nativeEvent.offsetX;
+    const divProgress = (offset / width) * 100;
+    audioRef.current.currentTime = (divProgress / 100) * duration;
+  };
+  const nextButton = () => {
+    const index = newSong.nowPlaying.findIndex((item) => item.id === song.id);
+    if (index === newSong.nowPlaying.length - 1) {
+      setSongIndex(0);
     } else {
-      audio.play();
+      setSongIndex(index + 1);
     }
   };
+  const prevButton = () => {
+    const index = newSong.nowPlaying.findIndex((item) => item.id === song.id);
+    if (songIndex === 0) {
+      setSongIndex(newSong.nowPlaying.length - 1);
+    } else {
+      setSongIndex(index - 1);
+    }
+  };
+  const loopMusic = () => {
+    setLoop(!loop);
+    audioRef.current.loop = loop;
+  };
+  const shuffleMusic = () => {
+    setSongIndex(Math.floor(Math.random() * newSong.nowPlaying.length));
+  };
+  const playSong = () => {
+    if (newSong.nowPlaying.length === 1) {
+      setIsPlaying(false);
+    }
+    setIsPlaying(!isPlaying);
+  };
+  useEffect(() => {
+    if (isPlaying) {
+      audioRef.current.play();
+    } else {
+      audioRef.current.pause();
+    }
+  }, [isPlaying]);
   return (
     <Container>
       <AudioContainer>
         <Wrapper>
           <SongInfo>
-            <SongImg src={newSong.cover} />
+            <SongImg src={song.cover} />
             <SongTitleWrapper>
-              <SongTitle>{newSong.title}</SongTitle>
-              <Artiste>{newSong.artist}</Artiste>
+              <SongTitle>{song.title}</SongTitle>
+              <Artiste>{song.artist}</Artiste>
             </SongTitleWrapper>
           </SongInfo>
           <Player>
             <PlayerIcon
               type="mobileIcons"
               src="/icons-and-images/shuffle.png"
+              onClick={shuffleMusic}
             />
             <PlayerIcon
               type="mobileIcons"
               src="/icons-and-images/previous.png"
+              onClick={prevButton}
             />
             <PlayButton onClick={playSong}>
-              <Play src="/icons-and-images/vector.png" />
+              {isPlaying ? (
+                <span style={{ color: "white" }} className="material-icons">
+                  pause
+                </span>
+              ) : (
+                <Play src="/icons-and-images/vector.png" />
+              )}
             </PlayButton>
-            <PlayerIcon type="next" src="/icons-and-images/next.png" />
+            <PlayerIcon
+              type="next"
+              src="/icons-and-images/next.png"
+              onClick={nextButton}
+            />
             <PlayerIcon
               type="mobileIcons"
               src="/icons-and-images/repeate-one.png"
+              onClick={loopMusic}
             />
           </Player>
           <VolumeSection>
@@ -277,18 +353,24 @@ const AudioPlayer = ({ timeUpdate, time, type }) => {
             />
           </VolumeSection>
         </Wrapper>
-        <SeekContainer>
+        <SeekContainer ref={seek} onClick={checkWidth}>
           <Seek
             type="range"
             controls
             min={0}
-            max={newSong.duration}
+            max={duration}
             value={time}
-            step="0.01"
-            onChange={timeUpdate}
+            onChange={progress}
           />
         </SeekContainer>
       </AudioContainer>
+      <audio
+        autoPlay
+        src={song.audio}
+        id={song.id}
+        ref={audioRef}
+        onTimeUpdate={onPlaying}
+      ></audio>
     </Container>
   );
 };

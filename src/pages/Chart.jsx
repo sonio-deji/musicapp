@@ -6,6 +6,7 @@ import ChartSongs from "../component/ChartSongs";
 import AudioPlayer from "../component/AudioPlayer";
 import MobileSidebar from "../component/MobileSidebar";
 import { useCycle } from "framer-motion";
+import { useState } from "react";
 const Container = styled.div`
   display: flex;
   padding: 20px 20px 650px 20px;
@@ -38,6 +39,7 @@ const Right = styled.div`
 
 const Chart = () => {
   const [menu, setMenu] = useCycle(false, true);
+  const [songLength, setSongLength] = useState(0);
 
   return (
     <Container>
@@ -47,8 +49,8 @@ const Chart = () => {
       </Left>
       <Right>
         <SearchBar setMenu={setMenu} />
-        <ChartMiddle />
-        <ChartSongs />
+        <ChartMiddle songLength={songLength} />
+        <ChartSongs setSongLength={setSongLength} />
       </Right>
       <AudioPlayer />
     </Container>

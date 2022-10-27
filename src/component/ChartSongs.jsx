@@ -6,11 +6,10 @@ import { useLocation } from "react-router-dom";
 
 const Container = styled.div``;
 
-const ChartSongs = () => {
+const ChartSongs = ({ setSongLength }) => {
   const location = useLocation();
   const id = location.state.chart.id.split("-")[1];
   const [songs, setsongs] = useState([]);
-
   useEffect(() => {
     const makeRequest = async () => {
       const song = await axios.get(
@@ -19,7 +18,8 @@ const ChartSongs = () => {
       setsongs(song.data[id].files);
     };
     makeRequest();
-  }, [id]);
+    setSongLength(songs.length);
+  }, [id, setSongLength, songs.length]);
   return (
     <Container>
       {songs.map((song) => (

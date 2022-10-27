@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { addNowPlaying } from "../redux/nowPlayingRedux";
+import { useDispatch } from "react-redux";
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -69,8 +71,13 @@ const Duration = styled.p`
 const Menu = styled.svg``;
 
 const ChartSong = ({ song }) => {
+  const dispatch = useDispatch();
+  const playMusic = () => {
+    dispatch(addNowPlaying(song));
+  };
+
   return (
-    <Container>
+    <Container onClick={playMusic}>
       <ImgContainer>
         <Image src={song.cover} />
         <LikeButton
@@ -105,7 +112,7 @@ const ChartSong = ({ song }) => {
         </TypeContainer>
       </SongContainer>
       <DurationContainer>
-        <Duration>{"hg"}</Duration>
+        <Duration>{song.duration}</Duration>
         <Menu
           width="17"
           height="17"
@@ -134,7 +141,6 @@ const ChartSong = ({ song }) => {
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <audio src={song.audio} />
         </Menu>
       </DurationContainer>
     </Container>

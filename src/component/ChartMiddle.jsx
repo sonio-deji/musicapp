@@ -55,7 +55,7 @@ const ActionContainer = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-const Action = styled.div`
+const Action = styled.button`
   background-color: rgba(255, 255, 255, 0.07);
   border-radius: 32px;
   font-size: 12px;
@@ -80,12 +80,13 @@ const Like = styled.div`
 `;
 const LikeImg = styled.img``;
 
-const ChartMiddle = () => {
+const ChartMiddle = ({ songLength }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const handleCollection = () => {
     dispatch(addCollection(location.state.chart));
   };
+
   return (
     <Container>
       <Left>
@@ -99,7 +100,9 @@ const ChartMiddle = () => {
           dolores esse facere, possimus saepe modi velit. Reiciendis provident
           numquam magni?
         </ChartDesc>
-        <ChartDetails>64 songs - 16 hrs+</ChartDetails>
+        <ChartDetails>
+          {songLength} songs - {songLength * 2}+ mins
+        </ChartDetails>
         <ActionContainer>
           <Action type="play">
             <ActionImg src="/icons-and-images/play.png" />

@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { addSongs, removeSong } from "../redux/newReleaseRedux";
-import { useState } from "react";
+import { addNowPlaying } from "../redux/nowPlayingRedux";
 
 const Container = styled.div`
   display: flex;
@@ -19,29 +18,15 @@ const Title = styled.span`
   font-size: 12px;
   color: rgba(255, 255, 255, 1);
 `;
-const NewRelease = ({ newSong, timeUpdate }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-
+const NewRelease = ({ newSong }) => {
   const dispatch = useDispatch();
-
   const playSong = () => {
-    const audioTag = document.getElementById(newSong.id);
-    const duration = audioTag.duration;
-    if (isPlaying === false) {
-      audioTag.play();
-      setIsPlaying(true);
-      dispatch(addSongs({ ...newSong, duration }));
-    } else {
-      audioTag.pause();
-      setIsPlaying(false);
-      dispatch(removeSong());
-    }
+    dispatch(addNowPlaying(newSong));
   };
   return (
     <Container onClick={playSong}>
       <Image src={newSong.cover} />
       <Title>{newSong.title}</Title>
-      <audio id={newSong.id} src={newSong.audio} onTimeUpdate={timeUpdate} />
     </Container>
   );
 };

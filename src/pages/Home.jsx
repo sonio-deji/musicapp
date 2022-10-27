@@ -6,8 +6,10 @@ import TopCharts from "../component/TopCharts";
 import NewReleases from "../component/NewReleases";
 import AudioPlayer from "../component/AudioPlayer";
 import MobileSidebar from "../component/MobileSidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCycle } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { fetchSongs } from "../redux/nowPlayingRedux";
 
 const Container = styled.main`
   background-color: #1d2123;
@@ -42,14 +44,14 @@ const Middle = styled.div`
 
 const Home = () => {
   const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
   const [menu, setMenu] = useCycle(false, true);
-  const [time, setTime] = useState(0);
   const handleSearch = (e) => {
     setSearch(e.target.value);
   };
-  const timeUpdate = (e) => {
-    setTime(e.target.currentTime);
-  };
+  useEffect(() => {
+    dispatch(fetchSongs());
+  });
   return (
     <Container>
       <MobileSidebar menu={menu} setMenu={setMenu} />
@@ -62,17 +64,9 @@ const Home = () => {
           <CuratedPlaylist />
           <TopCharts />
         </Middle>
-        <NewReleases
-          title={"New Releases."}
-          searchArtist={search}
-          timeUpdate={timeUpdate}
-        />
-        <NewReleases
-          title={"Popular in your area"}
-          searchArtist={search}
-          timeUpdate={timeUpdate}
-        />
-        <AudioPlayer timeUpdate={timeUpdate} time={time} />
+        <NewReleases title={"New Releases."} searchArtist={search} />
+        <NewReleases title={"Popular in your area"} searchArtist={search} />
+        <AudioPlayer />
       </Right>
     </Container>
   );
