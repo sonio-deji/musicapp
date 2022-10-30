@@ -3,7 +3,6 @@ import Sidebar from "../component/Sidebar";
 import SearchBar from "../component/SearchBar";
 import ChartMiddle from "../component/ChartMiddle";
 import ChartSongs from "../component/ChartSongs";
-import AudioPlayer from "../component/AudioPlayer";
 import MobileSidebar from "../component/MobileSidebar";
 import { useCycle } from "framer-motion";
 import { useState } from "react";
@@ -51,7 +50,6 @@ const Chart = () => {
         <ChartMiddle songLength={songLength} />
         <ChartSongs setSongLength={setSongLength} />
       </Right>
-      <AudioPlayer />
     </Container>
   );
 };

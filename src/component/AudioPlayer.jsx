@@ -230,7 +230,6 @@ const AudioPlayer = () => {
   const [volume, setVolume] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [shuffle, setShuffle] = useState(false);
-
   const [songIndex, setSongIndex] = useState(0);
   const [duration, setDuration] = useState(0);
   const [loop, setLoop] = useState(false);
@@ -269,20 +268,18 @@ const AudioPlayer = () => {
     audioRef.current.currentTime = (divProgress / 100) * duration;
   };
   const nextButton = () => {
+    const index = newSong.nowPlaying.findIndex((item) => item.id === song.id);
     if (shuffle) {
       setSongIndex(Math.floor(Math.random() * newSong.nowPlaying.length));
-    }
-    const index = newSong.nowPlaying.findIndex((item) => item.id === song.id);
-    if (index === newSong.nowPlaying.length - 1) {
-      setSongIndex(0);
     } else {
-      setSongIndex(index + 1);
+      if (index === newSong.nowPlaying.length - 1) {
+        setSongIndex(0);
+      } else {
+        setSongIndex(index + 1);
+      }
     }
   };
   const prevButton = () => {
-    if (shuffle) {
-      setSongIndex(Math.floor(Math.random() * newSong.nowPlaying.length));
-    }
     const index = newSong.nowPlaying.findIndex((item) => item.id === song.id);
     if (songIndex === 0) {
       setSongIndex(newSong.nowPlaying.length - 1);
@@ -295,12 +292,12 @@ const AudioPlayer = () => {
     audioRef.current.loop = loop;
   };
   const shuffleMusic = () => {
-    setSongIndex(Math.floor(Math.random() * newSong.nowPlaying.length));
     setShuffle(!shuffle);
   };
   const playSong = () => {
     setIsPlaying(!isPlaying);
   };
+
   return (
     <Container>
       <AudioContainer>
@@ -363,7 +360,7 @@ const AudioPlayer = () => {
             type="range"
             controls
             min={0}
-            max={duration}
+            max={duration ? duration : `${duration}`}
             value={time}
             onChange={progress}
           />

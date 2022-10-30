@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import AudioPlayer from "../component/AudioPlayer";
 import CollectionSongs from "../component/CollectionSongs";
 import CollectionTop from "../component/CollectionTop";
 import MobileSidebar from "../component/MobileSidebar";
@@ -87,8 +86,6 @@ const Collection = () => {
             <LikedSongs />
           </LikeContainer>
         </Slide>
-
-        <AudioPlayer />
       </Right>
     </Container>
   );

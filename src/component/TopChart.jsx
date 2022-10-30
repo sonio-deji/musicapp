@@ -78,27 +78,22 @@ const Like = styled.div`
 `;
 
 const TopChart = ({ chart }) => {
-  const [liked, setLiked] = useState("none");
+  const [likedColor, setLikedColor] = useState("none");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const handleChart = () => {
     navigate("/chart", { state: { chart } });
   };
   const handleLike = () => {
-    dispatch(addLiked({ ...chart }));
-
-    if (liked === "none") {
-      setLiked("red");
-    } else {
-      setLiked("none");
-    }
+    dispatch(addLiked(chart));
+    likedColor === "none" ? setLikedColor("red") : setLikedColor("none");
   };
+
   return (
     <Container>
-      <ImgSection>
+      <ImgSection onClick={handleChart}>
         <Image src={chart.cover} />
-        <SongDetails onClick={handleChart}>
+        <SongDetails>
           <SongTitle>{chart.title}</SongTitle>
           <Artiste>{chart.artist}</Artiste>
           <Duration>3:13</Duration>
@@ -110,7 +105,7 @@ const TopChart = ({ chart }) => {
           width="16"
           height="16"
           viewBox="0 0 16 16"
-          fill={liked}
+          fill={likedColor}
           xmlns="http://www.w3.org/2000/svg"
         >
           <path

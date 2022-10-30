@@ -7,11 +7,6 @@ const likedSlice = createSlice({
   },
   reducers: {
     addLiked: (state, action) => {
-      if (state.likeIcon === false) {
-        state.likeIcon = true;
-      } else {
-        state.likeIcon = false;
-      }
       const itemIndex = state.likedSongs.findIndex(
         (item) => item.id === action.payload.id
       );

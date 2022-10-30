@@ -4,7 +4,6 @@ import SearchBar from "../component/SearchBar";
 import CuratedPlaylist from "../component/CuratedPlaylist";
 import TopCharts from "../component/TopCharts";
 import NewReleases from "../component/NewReleases";
-import AudioPlayer from "../component/AudioPlayer";
 import MobileSidebar from "../component/MobileSidebar";
 import { useState, useEffect } from "react";
 import { useCycle } from "framer-motion";
@@ -67,7 +66,6 @@ const Home = () => {
         </Middle>
         <NewReleases title={"New Releases."} searchArtist={search} />
         <NewReleases title={"Popular in your area"} searchArtist={search} />
-        <AudioPlayer />
       </Right>
     </Container>
   );
