@@ -1,6 +1,8 @@
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect, useRef } from "react";
+import { fetchSongs } from "../redux/nowPlayingRedux";
+
 const Container = styled.div`
   position: fixed;
   bottom: 0;
@@ -239,7 +241,7 @@ const AudioPlayer = () => {
   const seek = useRef();
   const newSong = useSelector((state) => state.nowPlaying);
   const song = newSong.nowPlaying[songIndex];
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (isPlaying) {
       audioRef.current.play();
@@ -247,6 +249,9 @@ const AudioPlayer = () => {
       audioRef.current.pause();
     }
   }, [isPlaying]);
+  useEffect(() => {
+    dispatch(fetchSongs());
+  }, [dispatch]);
   const handleVolume = (e) => {
     audioRef.current.volume = volume;
     setVolume(e.target.value);
