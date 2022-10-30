@@ -8,7 +8,6 @@ import MobileSidebar from "../component/MobileSidebar";
 import { useState, useEffect } from "react";
 import { useCycle } from "framer-motion";
 import { useDispatch } from "react-redux";
-import { fetchSongs } from "../redux/nowPlayingRedux";
 
 const Container = styled.main`
   background-color: #1d2123;
@@ -49,9 +48,7 @@ const Home = () => {
   const handleSearch = (e) => {
     setSearch(e.target.value);
   };
-  useEffect(() => {
-    dispatch(fetchSongs());
-  }, [dispatch]);
+
   return (
     <Container>
       <MobileSidebar menu={menu} setMenu={setMenu} />
